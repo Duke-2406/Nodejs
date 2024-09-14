@@ -2,15 +2,10 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const sequelize = require('./util/database');
-const Product = require('./models/product');
 const User = require('./models/user');
-const Cart = require('./models/cart');
-const CartItem = require('./models/cart-item');
-const Order = require('./models/order');
-const OrderItem = require('./models/order-item');
 
 const app = express();
 
@@ -24,10 +19,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    User.findByPk(1)
+  User.findById('66e5aff7a57ebec50cf6b7c8')
     .then(user => {
-        req.user = user;
-        next();
+      req.user = user;
+      next();
     })
     .catch(err => console.log(err));
 });
@@ -37,34 +32,23 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-Product.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
-User.hasMany(Product);
-User.hasOne(Cart);
-Cart.belongsTo(User);
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product, { through: OrderItem });
-
-sequelize
-    // .sync({force: true})
-    .sync()
-    .then(result => {
-        return User.findByPk(1);
-    })
-    .then(user => {
-        if(!user){
-            User.create({ name: 'Deepak', email: 'deepaksihare891@gmail.com'})
+mongoose.connect('mongodb+srv://deepaksihare891:AKyseKDwWczL74BZ@cluster0.e94a1.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0')
+.then(result => {
+  User.findOne().then(user => {
+    if(!user){
+      const user = new User({
+        name: 'Deepak',
+        email: 'deepaksihare891@gmail.com',
+        cart: {
+          items: []
         }
-        return user;
-    })
-    // .then(user => {
-    //     return user.createCart();
-    // })
-    .then( cart => {
-        app.listen(3000);
-    })
-    .catch(err => {
-        console.log(err);
-    });
+      });
+      user.save();
+    }
+  })
+  app.listen(3000);
+})
+.catch(err => {
+  console.log(err);
+});
+
