@@ -22,7 +22,7 @@ const productSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    requied: true
+    required: true
   }
 });
 
@@ -54,7 +54,7 @@ module.exports = mongoose.model('Product', productSchema);
 //     }
 //     return dbOp
 //       .then(result => {
-//         console.log('Saved');
+//         console.log(result);
 //       })
 //       .catch(err => {
 //         console.log(err);
@@ -68,6 +68,7 @@ module.exports = mongoose.model('Product', productSchema);
 //       .find()
 //       .toArray()
 //       .then(products => {
+//         console.log(products);
 //         return products;
 //       })
 //       .catch(err => {
@@ -82,6 +83,7 @@ module.exports = mongoose.model('Product', productSchema);
 //       .find({ _id: new mongodb.ObjectId(prodId) })
 //       .next()
 //       .then(product => {
+//         console.log(product);
 //         return product;
 //       })
 //       .catch(err => {
