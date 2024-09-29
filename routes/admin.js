@@ -23,7 +23,6 @@ router.post('/add-product',
         .trim(),
         body('price').isFloat(),
         body('description')
-        .isAlphanumeric()
         .isLength({min:3, max: 400})
         .trim()
     ], 
@@ -40,7 +39,6 @@ router.post('/edit-product',
         .trim(),
         body('price').isFloat(),
         body('description')
-        .isAlphanumeric()
         .isLength({min:3, max: 400})
         .trim()
     ], 
